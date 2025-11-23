@@ -1673,6 +1673,12 @@ int GetArrayLength(void *env, void *array) {
 
 void patch_game(void) {
 	hook_addr(so_symbol(&main_mod, "S3DClient_InstallCurrentUserEventHook"), (uintptr_t)&ret0);
+
+	// Don't display the annoying Control Settings screen
+	uint32_t nop = 0xE1A00000;
+	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x245A40), &nop, sizeof(nop));
+	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x245AD4), &nop, sizeof(nop));
+	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x245AF4), &nop, sizeof(nop));
 }
 
 uint8_t is_lowend = 0;
