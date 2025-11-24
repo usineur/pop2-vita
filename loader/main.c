@@ -1863,7 +1863,7 @@ int main(int argc, char *argv[]) {
 
 	vglSetSemanticBindingMode(VGL_MODE_POSTPONED);
 	vglUseTripleBuffering(GL_FALSE);
-	vglInitExtended(0, SCREEN_W, SCREEN_H, 64 * 1024 * 1024, SCE_GXM_MULTISAMPLE_4X);
+	vglInitExtended(0, SCREEN_W, SCREEN_H, 16 * 1024 * 1024, SCE_GXM_MULTISAMPLE_NONE);
 
 	patch_game();
 	so_flush_caches(&main_mod);
