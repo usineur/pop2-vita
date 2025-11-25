@@ -13,6 +13,11 @@ By doing so, it's basically as if we emulate a minimalist Android environment in
 
 ## Changelog
 
+### v1.1
+
+- 60 FPS.
+- Fix "Control Settings" screen displaying after prince few steps.
+
 ### v1.0
 
 - Initial Release.
