@@ -69,7 +69,7 @@ int file_exists(const char *path) {
 	return sceIoGetstat(path, &stat) >= 0;
 }
 
-int _newlib_heap_size_user = 200 * 1024 * 1024;
+int _newlib_heap_size_user = 128 * 1024 * 1024;
 
 so_module main_mod;
 
@@ -1674,11 +1674,13 @@ int GetArrayLength(void *env, void *array) {
 void patch_game(void) {
 	hook_addr(so_symbol(&main_mod, "S3DClient_InstallCurrentUserEventHook"), (uintptr_t)&ret0);
 
-	// Don't display the annoying Control Settings screen
+	// Display Control Settings screen only on start (first level)
 	uint32_t nop = 0xE1A00000;
-	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x245A40), &nop, sizeof(nop));
-	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x245AD4), &nop, sizeof(nop));
-	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x245AF4), &nop, sizeof(nop));
+	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x1B1CE0), &nop, sizeof(nop));
+	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x2019E8), &nop, sizeof(nop));
+	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x201D0C), &nop, sizeof(nop));
+	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x201EBC), &nop, sizeof(nop));
+	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x201F94), &nop, sizeof(nop));
 }
 
 uint8_t is_lowend = 0;
@@ -1808,6 +1810,7 @@ void *pthread_main(void *arg) {
 		handleKey(SCE_CTRL_TRIANGLE, 100);
 		handleKey(SCE_CTRL_LTRIGGER, 102);
 		handleKey(SCE_CTRL_RTRIGGER, 103);
+		handleKey(SCE_CTRL_START, 108);
 		oldpad = pad.buttons;
 
 		if (!Engine_DidPassFirstFrame(fake_env)) {
@@ -1863,7 +1866,8 @@ int main(int argc, char *argv[]) {
 
 	vglSetSemanticBindingMode(VGL_MODE_POSTPONED);
 	vglUseTripleBuffering(GL_FALSE);
-	vglInitExtended(0, SCREEN_W, SCREEN_H, 16 * 1024 * 1024, SCE_GXM_MULTISAMPLE_NONE);
+	vglSetParamBufferSize(6 * 1024 * 1024);
+	vglInitWithCustomThreshold(0, SCREEN_W, SCREEN_H, 6 * 1024 * 1024, 0, 0, 0, SCE_GXM_MULTISAMPLE_2X);
 
 	patch_game();
 	so_flush_caches(&main_mod);
@@ -1913,11 +1917,11 @@ int main(int argc, char *argv[]) {
 	*(uintptr_t *)(fake_env + 0x36C) = (uintptr_t)GetJavaVM;
 	*(uintptr_t *)(fake_env + 0x374) = (uintptr_t)GetStringUTFRegion;
 
-	pthread_t t2;
-	pthread_attr_t attr2;
-	pthread_attr_init(&attr2);
-	pthread_attr_setstacksize(&attr2, 2 * 1024 * 1024);
-	pthread_create(&t2, &attr2, pthread_main, NULL);
+	pthread_t t;
+	pthread_attr_t attr;
+	pthread_attr_init(&attr);
+	pthread_attr_setstacksize(&attr, 512 * 1024);
+	pthread_create(&t, &attr, pthread_main, NULL);
 
 	return sceKernelExitDeleteThread(0);
 }
