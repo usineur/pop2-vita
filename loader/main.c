@@ -1713,6 +1713,7 @@ int SplashRender() {
 	glBindTexture(GL_TEXTURE_2D, splash_tex);
 	glEnable(GL_TEXTURE_2D);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	vglSwapBuffers(GL_FALSE);
 
 	return 0;
 }
@@ -1747,6 +1748,8 @@ void *pthread_main(void *arg) {
 	Engine_Initialize(fake_env);
 
 	Engine_Pause(fake_env, NULL, 0);
+
+	SplashRender();
 
 	sceClibPrintf("Entering main loop\n");
 
@@ -1813,13 +1816,11 @@ void *pthread_main(void *arg) {
 		handleKey(SCE_CTRL_START, 108);
 		oldpad = pad.buttons;
 
-		if (!Engine_DidPassFirstFrame(fake_env)) {
-			SplashRender();
+		Engine_RunOneFrame(fake_env);
+
+		if (Engine_DidPassFirstFrame(fake_env)) {
 			vglSwapBuffers(GL_FALSE);
 		}
-
-		Engine_RunOneFrame(fake_env);
-		vglSwapBuffers(GL_FALSE);
 
 		if (end_session) {
 			exit(0);
