@@ -976,7 +976,72 @@ int scandir_hook(const char *dir, struct android_dirent ***namelist,
 	int (*selector) (const struct dirent *),
 	int (*compar) (const struct dirent **, const struct dirent **))
 {
-	return -1;
+	DIR *dp = opendir(dir);
+	struct dirent *current;
+	struct android_dirent d;
+	struct android_dirent *android_current = &d;
+	struct android_dirent **names = NULL;
+	size_t names_size = 0, pos;
+
+	if (dp == NULL)
+		return -1;
+
+	pos = 0;
+	while ((current = readdir (dp)) != NULL) {
+		int use_it = selector == NULL;
+
+		sceClibMemcpy(android_current->d_name, current->d_name, 256);
+		android_current->d_type = SCE_S_ISDIR(current->d_stat.st_mode) ? 4 : 8;
+
+		if (! use_it) {
+			use_it = (*selector) (android_current);
+			/* The selector function might have changed errno.
+			* It was zero before and it need to be again to make
+			* the latter tests work.  */
+			//if (! use_it)
+			//__set_errno (0);
+		}
+		if (use_it) {
+			struct android_dirent *vnew;
+			size_t dsize;
+
+			if (pos == names_size)
+			{
+				struct android_dirent **new;
+				if (names_size == 0)
+					names_size = 10;
+				else
+					names_size *= 2;
+				new = (struct android_dirent **) vglRealloc (names, names_size * sizeof (struct android_dirent *));
+				if (new == NULL)
+					break;
+				names = new;
+			}
+
+			dsize = &android_current->d_name[256+1] - (char*)android_current;
+			vnew = (struct android_dirent *) vglMalloc (dsize);
+			if (vnew == NULL)
+				break;
+
+			names[pos++] = (struct android_dirent *) sceClibMemcpy (vnew, android_current, dsize);
+		}
+	}
+
+	if (errno != 0) {
+		closedir (dp);
+		while (pos > 0)
+			vglFree (names[--pos]);
+		vglFree (names);
+		return -1;
+	}
+
+	closedir (dp);
+
+	/* Sort the list if we have a comparison function to sort with.  */
+	if (compar != NULL)
+		qsort (names, pos, sizeof (struct android_dirent *), (__compar_fn_t) compar);
+	*namelist = names;
+	return pos;
 }
 
 extern void *__aeabi_memset8;
@@ -1671,8 +1736,18 @@ int GetArrayLength(void *env, void *array) {
 	return *(int *)array;
 }
 
+int* (* _ZN7Pandora10EngineCore6StringaSEPKc)(void* this, const char* a2);
+
+int GetSystemFontsDirectory(void *this, void* a2) {
+	_ZN7Pandora10EngineCore6StringaSEPKc(this, "ux0:data/pop2/Fonts");
+	return 1;
+}
+
 void patch_game(void) {
 	hook_addr(so_symbol(&main_mod, "S3DClient_InstallCurrentUserEventHook"), (uintptr_t)&ret0);
+	// Simplified Chinese requires an additional font
+	_ZN7Pandora10EngineCore6StringaSEPKc = (void *)so_symbol(&main_mod, "_ZN7Pandora10EngineCore6StringaSEPKc");
+	hook_addr(so_symbol(&main_mod, "_ZN7Pandora10EngineCore11SystemUtils23GetSystemFontsDirectoryERNS0_6StringE"), (uintptr_t)&GetSystemFontsDirectory);
 
 	// Display Control Settings screen only on start (first level)
 	uint32_t nop = 0xE1A00000;
