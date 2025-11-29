@@ -13,6 +13,12 @@ By doing so, it's basically as if we emulate a minimalist Android environment in
 
 ## Changelog
 
+### v1.2
+
+- Re-enable MSAA (2x).
+- Better PSTV support.
+- Fix Simplified Chinese not displaying fonts.
+
 ### v1.1
 
 - 60 FPS.
