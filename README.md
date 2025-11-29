@@ -41,7 +41,7 @@ By doing so, it's basically as if we emulate a minimalist Android environment in
 - Open the apk with your zip explorer, extract the following files and copy them to `ux0:data/pop2`
   - `libS3DClient.so` from the `lib/armeabi-v7a` folder
   - `S3DMain.smf` from the `assets` folder and rename it to `S3DMain.stk`
-- **Chinese users only**: Create `ux0:data/pop2/Fonts` folder and copy [DroidSansFallback.ttf](https://github.com/usineur/pop2-vita/raw/refs/heads/patch1/DroidSansFallback.ttf) to it.
+- **Chinese users only**: Create `ux0:data/pop2/Fonts` folder and copy [DroidSansFallback.ttf](https://github.com/usineur/pop2-vita/raw/refs/heads/master/DroidSansFallback.ttf) to it.
 
 ## Build Instructions (For Developers)
 
