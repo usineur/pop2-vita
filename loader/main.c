@@ -1813,7 +1813,7 @@ void *pthread_main(void *arg) {
 	sceClibPrintf("JNI_OnLoad\n");
 	JNI_OnLoad(fake_vm);
 
-	Engine_SetSystemVersion(fake_env, NULL, "v.1.2-vita");
+	Engine_SetSystemVersion(fake_env, NULL, "v.1.3-vita");
 	Engine_SetDirectories(fake_env, NULL, "ux0:data/pop2", "ux0:data/pop2", "ux0:data/pop2");
 
 	Engine_SurfaceCreated();

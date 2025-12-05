@@ -13,6 +13,10 @@ By doing so, it's basically as if we emulate a minimalist Android environment in
 
 ## Changelog
 
+### v1.3
+- Improve fps
+- Also vitaGL improvements, thx Rinnegatamante
+
 ### v1.2
 
 - Re-enable MSAA (2x).
@@ -54,8 +58,6 @@ By doing so, it's basically as if we emulate a minimalist Android environment in
 In order to build the loader, you'll need a [vitasdk](https://github.com/vitasdk) build fully compiled with softfp usage (Instructions here: https://github.com/vitasdk-softfp).
 
 Additionally, you'll need these libraries to be compiled as well with `-mfloat-abi=softfp` added to their CFLAGS:
-
-- [SDL2_vitagl](https://github.com/Northfear/SDL/tree/vitagl)
 
 - [libmathneon](https://github.com/Rinnegatamante/math-neon)
 
