@@ -1055,6 +1055,56 @@ extern void *__aeabi_memclr;
 extern void *__aeabi_memclr4;
 extern void *__aeabi_memclr8;
 
+void glShaderSource_hook(GLuint shader, GLsizei count, const GLchar **string, const GLint *length) {
+	if (shader != 81) {
+		glShaderSource(shader, count, string, length);
+		return;
+	}
+
+	GLint *lens = malloc(count * sizeof(GLint));
+	GLint total_len = 0;
+	for (GLsizei i = 0; i < count; i++) {
+		lens[i] = (length && length[i] > 0) ? length[i] : strlen(string[i]);
+		total_len += lens[i];
+	}
+
+	char *buffer = malloc(total_len + 1);
+	char *p = buffer;
+
+	for (GLsizei i = 0; i < count; i++) {
+		memcpy(p, string[i], lens[i]);
+		p += lens[i];
+	}
+
+	*p = '\0';
+
+	const char *target = "rOut0 = texture2DProj(uFPTexture0, vTexCoord0);";
+	const char *wanted = "rOut0 = texture2D(uFPTexture0, vTexCoord0.xy / vTexCoord0.w);";
+
+	char *pos = strstr(buffer, target);
+
+	GLint target_len = strlen(target);
+	GLint wanted_len = strlen(wanted);
+	GLint prefix_len = pos - buffer;
+	GLint patched_len = total_len - target_len + wanted_len;
+
+	char *patched = malloc(patched_len + 1);
+
+	memcpy(patched, buffer, prefix_len);
+	memcpy(patched + prefix_len, wanted, wanted_len);
+	memcpy(patched + prefix_len + wanted_len, pos + target_len, total_len - prefix_len - target_len);
+	patched[patched_len] = '\0';
+
+	free(buffer);
+	free(lens);
+
+	const char *s[1] = { patched };
+	GLint l[1] = { patched_len };
+	glShaderSource(shader, 1, s, l);
+
+	free(patched);
+}
+
 static so_default_dynlib default_dynlib[] = {
 	{ "fmaxf", (uintptr_t)&fmaxf },
 	{ "fmaf", (uintptr_t)&fmaf },
@@ -1068,6 +1118,7 @@ static so_default_dynlib default_dynlib[] = {
 	{ "glFramebufferRenderbuffer", (uintptr_t)&ret0 },
 	{ "glDeleteRenderbuffers", (uintptr_t)&ret0 },
 	{ "glBindRenderbuffer", (uintptr_t)&ret0 },
+	{ "glShaderSource", (uintptr_t)&glShaderSource_hook },
 	{ "fsetpos", (uintptr_t)&fsetpos },
 	{ "sem_destroy", (uintptr_t)&sem_destroy_soloader },
 	{ "sem_getvalue", (uintptr_t)&sem_getvalue_soloader },
