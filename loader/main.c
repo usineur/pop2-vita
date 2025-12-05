@@ -1941,7 +1941,6 @@ int main(int argc, char *argv[]) {
 	so_resolve(&main_mod, default_dynlib, sizeof(default_dynlib), 0);
 
 	vglSetSemanticBindingMode(VGL_MODE_POSTPONED);
-	vglUseTripleBuffering(GL_FALSE);
 	vglSetParamBufferSize(6 * 1024 * 1024);
 	vglInitWithCustomThreshold(0, SCREEN_W, SCREEN_H, 6 * 1024 * 1024, 0, 0, 0, SCE_GXM_MULTISAMPLE_2X);
 
