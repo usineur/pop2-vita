@@ -1526,8 +1526,7 @@ enum MethodIDs {
 	UNKNOWN = 0,
 	INIT,
 	IS_CONNECTED_TO_NETWORK,
-	GET_DEVICE_LANGUAGE,
-	END_SESSION
+	GET_DEVICE_LANGUAGE
 } MethodIDs;
 
 typedef struct {
@@ -1538,8 +1537,7 @@ typedef struct {
 static NameToMethodID name_to_method_ids[] = {
 	{ "<init>", INIT },
 	{ "IsConnectedToNetwork", IS_CONNECTED_TO_NETWORK },
-	{ "GetDeviceLanguage", GET_DEVICE_LANGUAGE },
-	{ "onEndSession", END_SESSION }
+	{ "GetDeviceLanguage", GET_DEVICE_LANGUAGE }
 };
 
 int GetMethodID(void *env, void *class, const char *name, const char *sig) {
@@ -1563,12 +1561,8 @@ int GetStaticMethodID(void *env, void *class, const char *name, const char *sig)
 	return UNKNOWN;
 }
 
-int end_session = 0;
-
 void CallStaticVoidMethodV(void *env, void *obj, int methodID, uintptr_t *args) {
 	switch (methodID) {
-	case END_SESSION:
-		end_session = 1;
 		break;
 	}
 }
@@ -1819,7 +1813,7 @@ void *pthread_main(void *arg) {
 	engineSurfaceCreated();
 	engineSurfaceChanged(fake_env, NULL, SCREEN_W, SCREEN_H);
 
-	sceClibPrintf("engineInitialize\n");
+	sceClibPrintf("Engine Initialize\n");
 	engineInitialize(fake_env);
 
 	enginePause(fake_env, NULL, 0);
@@ -1907,15 +1901,12 @@ void *pthread_main(void *arg) {
 		float ly = pad.ly / 127.5f - 1.0f;
 		handleAxis(lx, ly);
 
-		engineRunOneFrame(fake_env);
-
-		if (engineDidPassFirstFrame(fake_env)) {
-			vglSwapBuffers(GL_FALSE);
-		}
-
-		if (end_session) {
+		if (engineRunOneFrame(fake_env)) {
+			if (engineDidPassFirstFrame(fake_env)) {
+				vglSwapBuffers(GL_FALSE);
+			}
+		} else {
 			exit(0);
-			break;
 		}
 	}
 
