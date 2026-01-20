@@ -3,7 +3,7 @@
  * Copyright (C) 2025 Matthieu Milan
  *
  * This software may be modified and distributed under the terms
- * of the MIT license.	See the LICENSE file for details.
+ * of the MIT license. See the LICENSE file for details.
  */
 
 #include <vitasdk.h>
@@ -145,9 +145,9 @@ int ret1(void) {
 	return 1;
 }
 
-#define  MUTEX_TYPE_NORMAL	 0x0000
-#define  MUTEX_TYPE_RECURSIVE  0x4000
-#define  MUTEX_TYPE_ERRORCHECK 0x8000
+#define MUTEX_TYPE_NORMAL     0x0000
+#define MUTEX_TYPE_RECURSIVE  0x4000
+#define MUTEX_TYPE_ERRORCHECK 0x8000
 
 static void init_static_mutex(pthread_mutex_t **mutex)
 {
@@ -1795,34 +1795,34 @@ int SplashRender() {
 
 void *pthread_main(void *arg) {
 	int (* JNI_OnLoad) (void *vm) = (void *)so_symbol(&main_mod, "JNI_OnLoad");
-	int (* Engine_Initialize) (void *env) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineInitialize");
-	int (* Engine_RunOneFrame) (void *env) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineRunOneFrame");
-	int (* Engine_DidPassFirstFrame) (void *env) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineDidPassFirstFrame");
-	int (* Engine_SetSystemVersion) (void *env, void *obj, char *ver) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineSetSystemVersion");
-	int (* Engine_SetDirectories) (void *env, void *obj, char *cache_path, char *home_path, char *pack_path) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineSetDirectories");
-	int (* Engine_Pause) (void *env, void *obj, int pause) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_enginePause");
-	int (* Engine_Touch) (void *env, void *obj, int state, float x, float y, int state2, float x2, float y2, int state3, float x3, float y3, int state4, float x4, float y4, int state5, float x5, float y5) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnTouchesChange");
-	int (* Engine_SurfaceCreated) () = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnSurfaceCreated");
-	int (* Engine_SurfaceChanged) (void *env, void *obj, int width, int height) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnSurfaceChanged");
-	int (* Engine_OnMouseMove) (void *env, void *obj, float x, float y) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnMouseMove");
-	int (* Engine_OnMouseUp) (void *env, void *obj, float x, float y) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnMouseButtonUp");
-	int (* Engine_OnMouseDown) (void *env, void *obj, float x, float y) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnMouseButtonDown");
-	int (* Engine_OnKeyboardKeyUp) (void *env, void *obj, int x, int y, int b) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnKeyboardKeyUp");
-	int (* Engine_OnKeyboardKeyDown) (void *env, void *obj, int x, int y, int b) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnKeyboardKeyDown");
+	int (* engineInitialize) (void *env) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineInitialize");
+	int (* engineRunOneFrame) (void *env) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineRunOneFrame");
+	int (* engineDidPassFirstFrame) (void *env) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineDidPassFirstFrame");
+	int (* engineSetSystemVersion) (void *env, void *obj, char *ver) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineSetSystemVersion");
+	int (* engineSetDirectories) (void *env, void *obj, char *cache_path, char *home_path, char *pack_path) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineSetDirectories");
+	int (* enginePause) (void *env, void *obj, int pause) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_enginePause");
+	int (* engineTouch) (void *env, void *obj, int state, float x, float y, int state2, float x2, float y2, int state3, float x3, float y3, int state4, float x4, float y4, int state5, float x5, float y5) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnTouchesChange");
+	int (* engineSurfaceCreated) () = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnSurfaceCreated");
+	int (* engineSurfaceChanged) (void *env, void *obj, int width, int height) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnSurfaceChanged");
+	int (* engineOnMouseMove) (void *env, void *obj, float x, float y) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnMouseMove");
+	int (* engineOnMouseUp) (void *env, void *obj, float x, float y) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnMouseButtonUp");
+	int (* engineOnMouseDown) (void *env, void *obj, float x, float y) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnMouseButtonDown");
+	int (* engineOnKeyboardKeyUp) (void *env, void *obj, int button, int flag) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnKeyboardKeyUp");
+	int (* engineOnKeyboardKeyDown) (void *env, void *obj, int button, int flag) = (void *)so_symbol(&main_mod, "Java_com_ubisoft_pop2_S3DRenderer_engineOnKeyboardKeyDown");
 
 	sceClibPrintf("JNI_OnLoad\n");
 	JNI_OnLoad(fake_vm);
 
-	Engine_SetSystemVersion(fake_env, NULL, "v.1.3-vita");
-	Engine_SetDirectories(fake_env, NULL, "ux0:data/pop2", "ux0:data/pop2", "ux0:data/pop2");
+	engineSetSystemVersion(fake_env, NULL, "v.1.3-vita");
+	engineSetDirectories(fake_env, NULL, "ux0:data/pop2", "ux0:data/pop2", "ux0:data/pop2");
 
-	Engine_SurfaceCreated();
-	Engine_SurfaceChanged(fake_env, NULL, SCREEN_W, SCREEN_H);
+	engineSurfaceCreated();
+	engineSurfaceChanged(fake_env, NULL, SCREEN_W, SCREEN_H);
 
-	sceClibPrintf("Engine_Initialize\n");
-	Engine_Initialize(fake_env);
+	sceClibPrintf("engineInitialize\n");
+	engineInitialize(fake_env);
 
-	Engine_Pause(fake_env, NULL, 0);
+	enginePause(fake_env, NULL, 0);
 
 	SplashRender();
 
@@ -1830,12 +1830,24 @@ void *pthread_main(void *arg) {
 
 	#define handleKey(btn, code) \
 		if (((pad.buttons & btn) == btn) && !((oldpad & btn) == btn)) { \
-			Engine_OnKeyboardKeyDown(fake_env, NULL, code, 0, 1); \
+			engineOnKeyboardKeyDown(fake_env, NULL, code, 1); \
 		} else if (((oldpad & btn) == btn) && !((pad.buttons & btn) == btn)) { \
-			Engine_OnKeyboardKeyUp(fake_env, NULL, code, 0, 0); \
+			engineOnKeyboardKeyUp(fake_env, NULL, code, 0); \
 		}
 
+	#define handleAxis(lx, ly) \
+		if (m_up && ly > -0.25f) { engineOnKeyboardKeyUp(fake_env, NULL, 19, 0); m_up = 0; } \
+		if (m_down && ly < 0.25f) { engineOnKeyboardKeyUp(fake_env, NULL, 20, 0); m_down = 0; } \
+		if (m_left && lx > -0.25f) { engineOnKeyboardKeyUp(fake_env, NULL, 21, 0); m_left = 0; } \
+		if (m_right && lx < 0.25f) { engineOnKeyboardKeyUp(fake_env, NULL, 22, 0); m_right = 0; } \
+		if (!m_up && ly < -0.75f) { engineOnKeyboardKeyDown(fake_env, NULL, 19, 0); m_up = 1; } \
+		if (!m_down && ly > 0.75f) { engineOnKeyboardKeyDown(fake_env, NULL, 20, 0); m_down = 1; } \
+		if (!m_left && lx < -0.75f) { engineOnKeyboardKeyDown(fake_env, NULL, 21, 0); m_left = 1; } \
+		if (!m_right && lx > 0.75f) { engineOnKeyboardKeyDown(fake_env, NULL, 22, 0); m_right = 1; }
+
 	int lastX = -1, lastY = -1;
+	int m_up = 0,m_down = 0, m_left = 0, m_right = 0;
+
 	for (;;) {
 		SceTouchData touch;
 		sceTouchPeek(SCE_TOUCH_PORT_FRONT, &touch, 1);
@@ -1850,14 +1862,14 @@ void *pthread_main(void *arg) {
 					int x = (int)(touch.report[0].x * 0.5f);
 					int y = (int)(touch.report[0].y * 0.5f);
 					if (lastX == -1 || lastY == -1) {
-						Engine_OnMouseDown(fake_env, NULL, (float)x, (float)y);
+						engineOnMouseDown(fake_env, NULL, (float)x, (float)y);
 					} else {
-						Engine_OnMouseMove(fake_env, NULL, (float)x, (float)y);
+						engineOnMouseMove(fake_env, NULL, (float)x, (float)y);
 					}
 					lastX = x;
 					lastY = y;
 				} else {
-					Engine_OnMouseUp(fake_env, NULL, (float)lastX, (float)lastY);
+					engineOnMouseUp(fake_env, NULL, (float)lastX, (float)lastY);
 					lastX = lastY = -1;
 				}
 			} else {
@@ -1873,12 +1885,12 @@ void *pthread_main(void *arg) {
 				}
 			}
 		}
-		Engine_Touch(fake_env, NULL, ts[0], tx[0], ty[0], ts[1], tx[1], ty[1], ts[2], tx[2], ty[2], ts[3], tx[3], ty[3], ts[4], tx[4], ty[4]);
+		engineTouch(fake_env, NULL, ts[0], tx[0], ty[0], ts[1], tx[1], ty[1], ts[2], tx[2], ty[2], ts[3], tx[3], ty[3], ts[4], tx[4], ty[4]);
 
 		SceCtrlData pad;
 		static uint32_t oldpad = 0;
 		sceCtrlPeekBufferPositive(0, &pad, 1);
-		handleKey(SCE_CTRL_CIRCLE, 18);
+		handleKey(SCE_CTRL_CIRCLE, 4);
 		handleKey(SCE_CTRL_UP, 19);
 		handleKey(SCE_CTRL_DOWN, 20);
 		handleKey(SCE_CTRL_LEFT, 21);
@@ -1891,9 +1903,13 @@ void *pthread_main(void *arg) {
 		handleKey(SCE_CTRL_START, 108);
 		oldpad = pad.buttons;
 
-		Engine_RunOneFrame(fake_env);
+		float lx = pad.lx / 127.5f - 1.0f;
+		float ly = pad.ly / 127.5f - 1.0f;
+		handleAxis(lx, ly);
 
-		if (Engine_DidPassFirstFrame(fake_env)) {
+		engineRunOneFrame(fake_env);
+
+		if (engineDidPassFirstFrame(fake_env)) {
 			vglSwapBuffers(GL_FALSE);
 		}
 
