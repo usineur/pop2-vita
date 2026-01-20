@@ -1526,8 +1526,7 @@ enum MethodIDs {
 	UNKNOWN = 0,
 	INIT,
 	IS_CONNECTED_TO_NETWORK,
-	GET_DEVICE_LANGUAGE,
-	END_SESSION
+	GET_DEVICE_LANGUAGE
 } MethodIDs;
 
 typedef struct {
@@ -1538,8 +1537,7 @@ typedef struct {
 static NameToMethodID name_to_method_ids[] = {
 	{ "<init>", INIT },
 	{ "IsConnectedToNetwork", IS_CONNECTED_TO_NETWORK },
-	{ "GetDeviceLanguage", GET_DEVICE_LANGUAGE },
-	{ "onEndSession", END_SESSION }
+	{ "GetDeviceLanguage", GET_DEVICE_LANGUAGE }
 };
 
 int GetMethodID(void *env, void *class, const char *name, const char *sig) {
@@ -1563,12 +1561,8 @@ int GetStaticMethodID(void *env, void *class, const char *name, const char *sig)
 	return UNKNOWN;
 }
 
-int end_session = 0;
-
 void CallStaticVoidMethodV(void *env, void *obj, int methodID, uintptr_t *args) {
 	switch (methodID) {
-	case END_SESSION:
-		end_session = 1;
 		break;
 	}
 }
@@ -1758,25 +1752,20 @@ void patch_game(void) {
 	kuKernelCpuUnrestrictedMemcpy((void *)(main_mod.text_base + 0x201F94), &nop, sizeof(nop));
 }
 
-uint8_t is_lowend = 0;
-
-int inited = 0;
-GLuint splash_tex;
-
 int SplashRender() {
-	if (!inited) {
-		inited = 1;
-		splash_img img = get_splashscreen();
-		glGenTextures(1, &splash_tex);
-		glBindTexture(GL_TEXTURE_2D, splash_tex	);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.w, img.h, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.buf);
-		free(img.buf);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glOrtho(0.0f, 960.0f, 544.0f, 0.0f, 0.0f, 1.0f);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-	}
+	GLuint splash_tex;
+
+	splash_img img = get_splashscreen();
+	glGenTextures(1, &splash_tex);
+	glBindTexture(GL_TEXTURE_2D, splash_tex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.w, img.h, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.buf);
+	free(img.buf);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glOrtho(0.0f, 960.0f, 544.0f, 0.0f, 0.0f, 1.0f);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 
 	float verts[] = {0.0f, 0.0f, 0.0f, 544.0f, 960.0f, 0.0f, 960.0, 544.0f};
 	float texs[] = {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f};
@@ -1819,7 +1808,7 @@ void *pthread_main(void *arg) {
 	engineSurfaceCreated();
 	engineSurfaceChanged(fake_env, NULL, SCREEN_W, SCREEN_H);
 
-	sceClibPrintf("engineInitialize\n");
+	sceClibPrintf("Engine Initialize\n");
 	engineInitialize(fake_env);
 
 	enginePause(fake_env, NULL, 0);
@@ -1907,15 +1896,12 @@ void *pthread_main(void *arg) {
 		float ly = pad.ly / 127.5f - 1.0f;
 		handleAxis(lx, ly);
 
-		engineRunOneFrame(fake_env);
-
-		if (engineDidPassFirstFrame(fake_env)) {
-			vglSwapBuffers(GL_FALSE);
-		}
-
-		if (end_session) {
+		if (engineRunOneFrame(fake_env)) {
+			if (engineDidPassFirstFrame(fake_env)) {
+				vglSwapBuffers(GL_FALSE);
+			}
+		} else {
 			exit(0);
-			break;
 		}
 	}
 

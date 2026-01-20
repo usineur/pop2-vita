@@ -14,8 +14,8 @@ set(VITA_APP_NAME "Prince of Persia 2")
 set(VITA_TITLEID  "POP200001")
 set(VITA_MKSFOEX_FLAGS "-d ATTRIBUTE2=12")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wl,-q,--allow-multiple-definition,--wrap,sceCtrlPeekBufferPositiveExt2 -D_GNU_SOURCE -Wall -O3 -fdiagnostics-color=always -fno-optimize-sibling-calls -mfloat-abi=softfp")
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11 -Wno-write-strings -fpermissive -fno-rtti")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wl,-q -D_GNU_SOURCE -Wall -O3 -mfloat-abi=softfp -fno-optimize-sibling-calls")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11 -Wno-write-strings")
 
 add_executable(pop2
   loader/main.c
@@ -27,39 +27,18 @@ add_executable(pop2
 target_link_libraries(pop2
   -Wl,--whole-archive pthread -Wl,--no-whole-archive
   openal
-  freetype
-  png
-  webp
-  jpeg
-  mikmod
-  z
-  zip
-  zstd
-  lzma
-  bz2
-  ssl
-  crypto
-  sndfile
   vorbisfile
   vorbis
-  vorbisenc
-  modplug
-  opusfile
-  opus
   ogg
-  FLAC
+  z
   m
-  imgui
   vitaGL
   stdc++
   vitashark
   SceShaccCgExt
   mathneon
-  mpg123
   taihen_stub
   kubridge_stub
-  SceNet_stub
-  SceNetCtl_stub
   SceAppMgr_stub
   SceAppUtil_stub
   SceAudio_stub
@@ -67,15 +46,10 @@ target_link_libraries(pop2
   SceCtrl_stub
   SceCommonDialog_stub
   SceDisplay_stub
-  SceFios2_stub
   SceGxm_stub
-  SceIme_stub
   SceShaccCg_stub
-  SceSysmodule_stub
   ScePower_stub
   SceTouch_stub
-  SceMotion_stub
-  SceHid_stub
   SceVshBridge_stub
   SceKernelDmacMgr_stub
 )
